@@ -3,6 +3,10 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 
+type SettingRow = {
+  key: string;
+  value: string | null;
+};
 
 export const runtime = 'nodejs';
 // 增加超时时间到最大值
@@ -21,7 +25,7 @@ export async function GET(request: Request) {
 
     
     // 将设置转换为键值对格式
-    const formattedSettings = settings.reduce((acc: Record<string, string>, setting) => {
+    const formattedSettings = settings.reduce((acc: Record<string, string>, setting: SettingRow) => {
       acc[setting.key] = setting.value || '';
       return acc;
     }, {});

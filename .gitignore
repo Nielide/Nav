@@ -29,6 +29,14 @@ yarn-error.log*
 
 # vercel
 .vercel
+.vercel-cache
+.vercel-config
+.vercel-data
+
+# local package/tool caches
+.npm-cache
+.pnpm-store
+.tmp
 
 # typescript
 *.tsbuildinfo
@@ -47,3 +55,4 @@ next-env.d.ts
 
 # 操作系统文件
 Thumbs.db
+.env*

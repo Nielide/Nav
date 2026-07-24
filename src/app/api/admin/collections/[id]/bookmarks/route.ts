@@ -1,6 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { Folder, Bookmark } from "@prisma/client";
+type Folder = {
+  id: string;
+};
+
+type Bookmark = {
+  id: string;
+};
 
 // 定义返回数据的类型
 interface FolderWithItems extends Folder {
@@ -17,21 +23,6 @@ export async function GET(
     const folderId = searchParams.get("folderId");
     const sortField = searchParams.get("sortField") || "createdAt";
     const sortOrder = searchParams.get("sortOrder") || "desc";
-
-    // 打印详细的查询条件
-    console.log("Query conditions:", {
-      collectionId: id,
-      folderId: folderId || null
-    });
-
-    // 先检查该集合下是否有书签（不带 folderId 条件）
-    const totalBookmarks = await prisma.bookmark.count({
-      where: {
-        collectionId: id,
-      }
-    });
-
-    console.log("Total bookmarks in collection:", totalBookmarks);
 
     // 获取书签，修改查询条件
     const currentBookmarks = await prisma.bookmark.findMany({
@@ -58,12 +49,6 @@ export async function GET(
       },
     });
 
-    // 打印查询结果
-    console.log("Query results:", {
-      totalFound: currentBookmarks.length,
-      bookmarks: currentBookmarks
-    });
-
     // 获取子文件夹
     const subfolders = await prisma.folder.findMany({
       where: {
@@ -74,9 +59,6 @@ export async function GET(
         name: 'asc'
       }
     });
-
-    console.log("Subfolders found:", subfolders.length);
-
     return NextResponse.json({
       currentBookmarks,
       subfolders,

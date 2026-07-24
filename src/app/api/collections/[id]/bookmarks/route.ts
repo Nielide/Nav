@@ -1,6 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { Folder, Bookmark } from "@prisma/client";
+type Folder = {
+  id: string;
+};
+
+type Bookmark = {
+  id: string;
+};
 
 // 定义返回数据的类型
 interface FolderWithItems extends Folder {
@@ -59,7 +65,7 @@ export async function GET(
         orderBy: {
           [sortField]: sortOrder as 'asc' | 'desc',
         },
-      })).map(async (folder) => {
+      })).map(async (folder: Folder) => {
         // 并行获取文件夹内的书签、子文件夹和总书签数
         const [bookmarks, childFolders, bookmarkCount] = await Promise.all([
           prisma.bookmark.findMany({
@@ -89,8 +95,8 @@ export async function GET(
         return {
           ...folder,
           items: [
-            ...childFolders.map(f => ({ ...f, type: 'folder' as const })),
-            ...bookmarks.map(b => ({ ...b, type: 'bookmark' as const }))
+            ...childFolders.map((f: Folder) => ({ ...f, type: 'folder' as const })),
+            ...bookmarks.map((b: Bookmark) => ({ ...b, type: 'bookmark' as const }))
           ],
           bookmarkCount
         };

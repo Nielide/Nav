@@ -72,7 +72,6 @@ export default function BasicSettingsPage() {
         }
 
         const data = await response.json();
-        console.log("Loaded settings:", data); // 调试日志
 
         const sanitizedData = Object.keys(data).reduce(
           (acc, key) => ({
@@ -111,7 +110,6 @@ export default function BasicSettingsPage() {
     e.preventDefault();
     try {
       setLoading(true);
-      console.log("Submitted settings for tab:", activeTab); // 调试日志
   
       const saveSettingPromises = [];
   
@@ -189,7 +187,6 @@ export default function BasicSettingsPage() {
           }
           return response.json();
         }).then(result => {
-          console.log("Save success:", result); // 调试日志
         })
       );
   

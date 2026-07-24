@@ -4,6 +4,14 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
+type CollectionRow = {
+  id: string;
+};
+
+type FolderId = {
+  id: string;
+};
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -34,7 +42,7 @@ export async function GET(request: Request) {
     //   totalBookmarks: number // Total number of bookmarks in the collection
     // }
     const collectionsWithBookmarkCount = await Promise.all(
-      collections.map(async (collection) => {
+      collections.map(async (collection: CollectionRow) => {
         const folders = await prisma.folder.findMany({
           where: {
             collectionId: collection.id
@@ -44,7 +52,7 @@ export async function GET(request: Request) {
           }
         });
 
-        const folderIds = folders.map(folder => folder.id);
+        const folderIds = folders.map((folder: FolderId) => folder.id);
 
         const totalBookmarks = await prisma.bookmark.count({
           where: {

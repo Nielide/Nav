@@ -54,7 +54,6 @@ export function ImportCollectionDialog({
     maxFiles: 1,
     maxSize: 5 * 1024 * 1024, // 5MB limit
     onError: (error) => {
-      console.log(error);
       if (
         error instanceof Error &&
         "code" in error &&
@@ -223,13 +222,6 @@ export function ImportCollectionDialog({
             (totalBookmarks - i - batchSize) / batchSize
           );
           const estimatedRemainingTime = batchDuration * remainingBatches;
-
-          console.log(
-            `Batch ${
-              Math.floor(i / batchSize) + 1
-            } imported, ${remainingBatches} batches remaining`,
-            data
-          );
 
           // Show import progress toast with batch time and estimated remaining time
           toast({

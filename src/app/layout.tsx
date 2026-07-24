@@ -10,6 +10,11 @@ import { cache } from 'react'
 import type { Metadata, ResolvingMetadata } from 'next'
 import { GoogleAnalytics } from '@next/third-parties/google'
 
+type SettingRow = {
+  key: string;
+  value: string | null;
+};
+
 async function checkSiteSettingTableExists() {
   const result: any = await prisma.$queryRaw`
     SELECT EXISTS (
@@ -160,7 +165,7 @@ export default async function RootLayout({
       });
 
       if (analytics.length > 0) {
-        analyticsMap = analytics.reduce((acc, setting) => {
+        analyticsMap = analytics.reduce((acc: Record<string, string>, setting: SettingRow) => {
           acc[setting.key] = setting.value || "";
           return acc;
         }, {} as Record<string, string>);

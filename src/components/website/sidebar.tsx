@@ -204,22 +204,6 @@ export function WebsiteSidebar({
       }
     });
 
-    // 添加调试日志
-    const logFolderStructure = (folders: FolderNode[], prefix = "") => {
-      folders.forEach((folder) => {
-        console.log(`${prefix}${folder.name} (Level: ${folder.level})`);
-        if (folder.children.length > 0) {
-          logFolderStructure(folder.children, prefix + "  ");
-        }
-      });
-    };
-
-    // 在开发环境下输出文件夹结构
-    if (process.env.NODE_ENV === "development") {
-      console.log("Folder structure:");
-      logFolderStructure(rootFolders);
-    }
-
     return rootFolders;
   };
 

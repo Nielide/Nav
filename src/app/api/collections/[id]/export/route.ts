@@ -51,7 +51,29 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { prisma } from "@/lib/prisma";
 import { randomUUID } from 'crypto';
-import { Folder } from "@prisma/client";
+type Folder = {
+  id: string;
+  name: string;
+  icon: string | null;
+  sortOrder: number;
+  parentId: string | null;
+};
+
+type ExportBookmarkWithTags = {
+  title: string;
+  url: string;
+  description: string | null;
+  icon: string | null;
+  isFeatured: boolean;
+  sortOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+  tags: Array<{ name: string }>;
+};
+
+type ExportFolderWithBookmarks = Folder & {
+  bookmarks: ExportBookmarkWithTags[];
+};
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -111,7 +133,6 @@ export async function GET(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    console.log('session', session);
     if (!session?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -173,8 +194,8 @@ export async function GET(
     // Process bookmarks
     const processedBookmarks: ExportedBookmark[] = [
       // Process bookmarks within folders
-      ...collection.folders.flatMap(folder =>
-        folder.bookmarks.map(bookmark => ({
+      ...collection.folders.flatMap((folder: ExportFolderWithBookmarks) =>
+        folder.bookmarks.map((bookmark: ExportBookmarkWithTags) => ({
           tempId: randomUUID(),
           type: 'bookmark',
           title: bookmark.title,
@@ -184,13 +205,13 @@ export async function GET(
           isFeatured: bookmark.isFeatured,
           sortOrder: bookmark.sortOrder,
           folderTempId: idMapping.get(folder.id), // Use mapping to get new tempId
-          tags: bookmark.tags.map(tag => tag.name),
+          tags: bookmark.tags.map((tag: { name: string }) => tag.name),
           createdAt: bookmark.createdAt.toISOString(),
           updatedAt: bookmark.updatedAt.toISOString(),
         }))
       ),
       // Process bookmarks directly belonging to Collection
-      ...collection.bookmarks.map(bookmark => ({
+      ...collection.bookmarks.map((bookmark: ExportBookmarkWithTags) => ({
         tempId: randomUUID(),
         type: 'bookmark',
         title: bookmark.title,
@@ -200,7 +221,7 @@ export async function GET(
         isFeatured: bookmark.isFeatured,
         sortOrder: bookmark.sortOrder,
         folderTempId: undefined,
-        tags: bookmark.tags.map(tag => tag.name),
+        tags: bookmark.tags.map((tag: { name: string }) => tag.name),
         createdAt: bookmark.createdAt.toISOString(),
         updatedAt: bookmark.updatedAt.toISOString(),
       }))

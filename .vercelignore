@@ -1,0 +1,7 @@
+.npm-cache
+.pnpm-store
+.tmp
+.vercel-cache
+.vercel-config
+.vercel-data
+node_modules

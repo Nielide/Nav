@@ -108,10 +108,6 @@ export function BookmarkDataTable({
   const safeBookmarks = Array.isArray(currentBookmarks) ? currentBookmarks : [];
   const safeFolders = Array.isArray(folders) ? folders : [];
 
-  console.log('Raw bookmarks:', bookmarks);
-  console.log('Safe bookmarks:', safeBookmarks);
-  console.log('Raw folders:', folders);
-  console.log('Safe folders:', safeFolders);
 
   const tableData = [
     ...safeFolders.map(folder => ({
@@ -141,7 +137,6 @@ export function BookmarkDataTable({
     }))
   ];
 
-  console.log('Processed tableData:', tableData);
 
   if (loading) {
     return (

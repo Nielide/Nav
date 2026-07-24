@@ -6,12 +6,10 @@ export function TopBanner() {
   const [isVisible, setIsVisible] = useState(true);
   const { settings, loading } = useSettings('feature');
 
-  console.log('TopBanner settings:', settings?.enableTopBanner, typeof settings?.enableTopBanner);
 
   if (loading) return null;
 
   if (settings?.enableTopBanner === 'false' || !isVisible) {
-    console.log('TopBanner should be hidden');
     return null;
   }
 

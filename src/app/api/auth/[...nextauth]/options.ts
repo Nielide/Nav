@@ -43,11 +43,9 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async session({ session, token }) {
-      console.log('Session callback:', { session, token }); // 调试日志
       return session;
     },
     async jwt({ token, user }) {
-      console.log('JWT callback:', { token, user }); // 调试日志
       return token;
     },
   }

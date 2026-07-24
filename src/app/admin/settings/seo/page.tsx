@@ -105,7 +105,6 @@ export default function SeoSettingsPage() {
           }
           return response.json();
         }).then(result => {
-          console.log("Save success:", result); // 调试日志
         })
       );
 

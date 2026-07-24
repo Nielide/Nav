@@ -21,7 +21,7 @@ export async function getSettingImages(settingKey: string) {
       return { success: false, error: 'Could not find the corresponding setting item' };
     }
 
-    const imageIds = setting.images.map(img => img.imageId);
+    const imageIds = setting.images.map((img: { imageId: string }) => img.imageId);
 
     return { 
       success: true, 
